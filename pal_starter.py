@@ -39,6 +39,9 @@ while True:
         with mcrcon.MCRcon(server_address, server_pass, server_port) as mcr:
             log = mcr.command(pal_stop)
             print(log)
+        with mcrcon.MCRcon(server_address, server_pass, server_port) as mcr:
+            log = mcr.command("Save")
+            print(log)
             # server_proc.terminate()
         time.sleep(10)
         print("[INFO]sleep 10s")
