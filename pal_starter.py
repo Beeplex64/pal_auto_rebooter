@@ -15,22 +15,18 @@ pal_start = ("/home/deck/Desktop/steamcmd/palworld/PalServer.sh "
 pal_stop = "Shutdown 30 !!!MEMORY_LEAK_REBOOT_IS_SCHEDULED_IN_30_SECONDS!!!"
 
 
-def start_server(proc):
+def start_server():
     print("[INFO]Initial Pal server start")
 
     while True:
-        line = proc.stdout.readline().decode('utf8', 'replace')
+        line = server_proc.stdout.readline().decode('utf8', 'replace')
         if line:
             print(f"[Server_log]{line}", end='')
 
-        if not line and proc.poll() is not None:
-
-            break
-
 
 server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-thread1 = threading.Thread(target=start_server, args=(server_proc,),)  # ytdlのスレッドを作成 ダウンロードに時間かかるときにBotが死ぬため
-thread1.start()  # ytdlのスレッドを実行
+thread1 = threading.Thread(target=start_server,)  # サーバーの標準出力を出すスレッドを作成
+thread1.start()  # サーバーの標準出力を出すスレッドを実行
 
 counter = 0
 print("[INFO]Start loop for check mem percent")
@@ -57,7 +53,8 @@ while True:
         time.sleep(10)
         print("[INFO]sleep 60s end sleep")
         print("[INFO]Reboot Pal server start")
-        server_proc = subprocess.run(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        counter = 0
     else:
         if counter >= 20:
             print(f"[CHECK]Server mem={mem.percent}%")
