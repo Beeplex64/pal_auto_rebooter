@@ -13,11 +13,21 @@ pal_start = ("/home/deck/Desktop/steamcmd/palworld/PalServer.sh "
               "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS")
 pal_stop = "Shutdown 30 メモリ使用量が90%を超えたためサーバが30秒後に終了します。"
 print("Initial Pal server start")
-server_proc = subprocess.run(pal_start, shell=True)
+server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 print("Start loop for check mem percent")
+
+
+def get_lines(proc):
+    line = proc.stdout.readline()
+    if line:
+        yield line
+
+
 while True:
     mem = psutil.virtual_memory()
+    get_lines(server_proc)
+
     if mem > 90:
         counter += 1
         print(f"Server mem allocation is too high! mem={mem}%")
