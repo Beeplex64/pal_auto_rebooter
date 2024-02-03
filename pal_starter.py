@@ -2,6 +2,7 @@ import psutil
 import subprocess
 import mcrcon
 import time
+import threading
 
 server_address = "127.0.0.1"  # マルチプレイするときに入れるアドレス
 with open('./pass.txt', 'r') as passwd:  # apss.txtからパスワードを読み取る
@@ -17,9 +18,18 @@ server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, st
 
 
 def get_lines(proc):
-    line = proc.stdout.readline()
-    if line:
-        yield line
+    while True:
+        line = proc.stdout.readline()
+        if line:
+            yield line
+
+        if not line and proc.poll() is not None:
+            break
+
+
+thread1 = threading.Thread(target=get_lines,
+                               args=(server_proc,))  # ytdlのスレッドを作成 ダウンロードに時間かかるときにBotが死ぬため
+thread1.start()  # ytdlのスレッドを実行
 
 counter = 0
 while True:
