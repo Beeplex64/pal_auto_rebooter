@@ -57,7 +57,7 @@ while True:
         time.sleep(10)
         print("[INFO]sleep 60s end sleep")
         print("[INFO]Reboot Pal server start")
-        server_proc = subprocess.run(pal_start, shell=True)
+        server_proc = subprocess.run(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     else:
         if counter >= 20:
             print(f"[CHECK]Server mem={mem.percent}%")
