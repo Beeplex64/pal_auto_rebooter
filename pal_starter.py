@@ -9,7 +9,7 @@ with open('./pass.txt', 'r') as passwd:  # apss.txtからパスワードを読�
 server_port="25575"           # ポート番号
 counter = 0
 
-pal_start = ("screen -S pal /home/deck/Desktop/steamcmd/palworld/PalServer.sh "
+pal_start = ("/home/deck/Desktop/steamcmd/palworld/PalServer.sh "
               "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS")
 pal_stop = "Shutdown 30 メモリ使用量が90%を超えたためサーバが30秒後に終了します。"
 print("Initial Pal server start")
