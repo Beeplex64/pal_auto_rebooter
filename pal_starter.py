@@ -21,7 +21,7 @@ def get_lines(proc):
     while True:
         line = proc.stdout.readline()
         if line:
-            yield line
+            print(f"[Server_log]{line}")
 
         if not line and proc.poll() is not None:
             break
@@ -32,24 +32,24 @@ thread1 = threading.Thread(target=get_lines,
 thread1.start()  # ytdlのスレッドを実行
 
 counter = 0
+print("Start loop for check mem percent")
 while True:
-    print("Start loop for check mem percent")
     mem = psutil.virtual_memory()
     # get_lines(server_proc)
 
     if mem.percent > 90:
         counter += 1
-        print(f"Server mem allocation is too high! mem={mem.percent}%")
+        print(f"[ERROR]Server mem allocation is too high! mem={mem.percent}%")
         with mcrcon.MCRcon(server_address, server_pass, server_port) as mcr:
             log = mcr.command(pal_stop)
             print(log)
             time.sleep(10)
             # server_proc.terminate()
-        print("Reboot Pal server start")
+        print("[INFO]Reboot Pal server start")
         server_proc = subprocess.run(pal_start, shell=True)
     else:
         if counter >= 20:
-            print(f"Server mem={mem.percent}%")
+            print(f"[CHECK]Server mem={mem.percent}%")
             counter = 0
     time.sleep(3)
 
