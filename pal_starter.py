@@ -28,9 +28,9 @@ while True:
     mem = psutil.virtual_memory()
     get_lines(server_proc)
 
-    if mem > 90:
+    if mem.percent > 90:
         counter += 1
-        print(f"Server mem allocation is too high! mem={mem}%")
+        print(f"Server mem allocation is too high! mem={mem.percent}%")
         with mcrcon.MCRcon(server_address, server_pass, server_port) as mcr:
             log = mcr.command(pal_stop)
             print(log)
@@ -40,7 +40,7 @@ while True:
         server_proc = subprocess.run(pal_start, shell=True)
     else:
         if counter >= 20:
-            print(f"Server mem={mem}%")
+            print(f"Server mem={mem.percent}%")
             counter = 0
     time.sleep(3)
 
