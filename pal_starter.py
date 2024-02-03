@@ -7,7 +7,7 @@ server_address = "127.0.0.1"  # マルチプレイするときに入れるアド
 with open('./pass.txt', 'r') as passwd:  # apss.txtからパスワードを読み取る
     server_pass = passwd.read()  # パスワード
 server_port="25575"           # ポート番号
-counter = 0
+
 
 pal_start = ("/home/deck/Desktop/steamcmd/palworld/PalServer.sh "
               "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS")
@@ -15,18 +15,17 @@ pal_stop = "Shutdown 30 メモリ使用量が90%を超えたためサーバが30
 print("Initial Pal server start")
 server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-print("Start loop for check mem percent")
-
 
 def get_lines(proc):
     line = proc.stdout.readline()
     if line:
         yield line
 
-
+counter = 0
 while True:
+    print("Start loop for check mem percent")
     mem = psutil.virtual_memory()
-    get_lines(server_proc)
+    # get_lines(server_proc)
 
     if mem.percent > 90:
         counter += 1
