@@ -15,9 +15,9 @@ pal_start = ("/home/deck/Desktop/steamcmd/palworld/PalServer.sh "
 pal_stop = "Shutdown 30 メモリ使用量が90%を超えたためサーバが30秒後に終了します。"
 
 
-def start_server():
+def start_server(proc):
     print("Initial Pal server start")
-    proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
     while True:
         line = proc.stdout.readline().decode('utf8', 'replace')
         if line:
@@ -27,7 +27,8 @@ def start_server():
             break
 
 
-thread1 = threading.Thread(target=start_server, args=(),)  # ytdlのスレッドを作成 ダウンロードに時間かかるときにBotが死ぬため
+proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+thread1 = threading.Thread(target=start_server, args=(proc,),)  # ytdlのスレッドを作成 ダウンロードに時間かかるときにBotが死ぬため
 thread1.start()  # ytdlのスレッドを実行
 
 counter = 0
