@@ -13,22 +13,21 @@ server_port="25575"           # ポート番号
 pal_start = ("/home/deck/Desktop/steamcmd/palworld/PalServer.sh "
               "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS")
 pal_stop = "Shutdown 30 メモリ使用量が90%を超えたためサーバが30秒後に終了します。"
-print("Initial Pal server start")
-server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
-def get_lines(proc):
+def start_server():
+    print("Initial Pal server start")
+    proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     while True:
-        line = proc.stdout.readline()
+        line = proc.stdout.readline().decode('utf8', 'replace')
         if line:
-            print(f"[Server_log]{line}")
+            print(f"[Server_log]{line}", end='')
 
         if not line and proc.poll() is not None:
             break
 
 
-thread1 = threading.Thread(target=get_lines,
-                               args=(server_proc,))  # ytdlのスレッドを作成 ダウンロードに時間かかるときにBotが死ぬため
+thread1 = threading.Thread(target=start_server, args=(),)  # ytdlのスレッドを作成 ダウンロードに時間かかるときにBotが死ぬため
 thread1.start()  # ytdlのスレッドを実行
 
 counter = 0
