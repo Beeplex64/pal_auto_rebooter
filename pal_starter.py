@@ -1,11 +1,11 @@
 import psutil
 import subprocess
-import mcrcon                 # mcrconのインポート
+import mcrcon
 import time
 
 server_address = "127.0.0.1"  # マルチプレイするときに入れるアドレス
 with open('./pass.txt', 'r') as passwd:  # apss.txtからパスワードを読み取る
-    server_pass = passwd.read()  # youtube playerの音量
+    server_pass = passwd.read()  # パスワード
 server_port="25575"           # ポート番号
 counter = 0
 
