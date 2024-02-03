@@ -16,7 +16,7 @@ pal_stop = "Shutdown 30 メモリ使用量が90%を超えたためサーバが30
 
 
 def start_server(proc):
-    print("Initial Pal server start")
+    print("[INFO]Initial Pal server start")
 
     while True:
         line = proc.stdout.readline().decode('utf8', 'replace')
@@ -32,7 +32,7 @@ thread1 = threading.Thread(target=start_server, args=(proc,),)  # ytdlのスレ�
 thread1.start()  # ytdlのスレッドを実行
 
 counter = 0
-print("Start loop for check mem percent")
+print("[INFO]Start loop for check mem percent")
 while True:
     mem = psutil.virtual_memory()
     # get_lines(server_proc)
@@ -42,8 +42,8 @@ while True:
         with mcrcon.MCRcon(server_address, server_pass, server_port) as mcr:
             log = mcr.command(pal_stop)
             print(log)
-            time.sleep(10)
             # server_proc.terminate()
+        time.sleep(10)
         print("[INFO]Reboot Pal server start")
         server_proc = subprocess.run(pal_start, shell=True)
     else:
