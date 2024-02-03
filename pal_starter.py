@@ -12,7 +12,7 @@ server_port = 25575              # ポート番号
 
 pal_start = ("/home/deck/Desktop/steamcmd/palworld/PalServer.sh "
               "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS")
-pal_stop = "Shutdown 30 メモリ使用量が90%を超えたためサーバが30秒後に終了します。"
+pal_stop = "Shutdown 30 !!!MEMORY_LEAK_REBOOT_IS_SCHEDULED_IN_30_SECONDS!!!"
 
 
 def start_server(proc):
@@ -24,11 +24,12 @@ def start_server(proc):
             print(f"[Server_log]{line}", end='')
 
         if not line and proc.poll() is not None:
+
             break
 
 
-proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-thread1 = threading.Thread(target=start_server, args=(proc,),)  # ytdlのスレッドを作成 ダウンロードに時間かかるときにBotが死ぬため
+server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+thread1 = threading.Thread(target=start_server, args=(server_proc,),)  # ytdlのスレッドを作成 ダウンロードに時間かかるときにBotが死ぬため
 thread1.start()  # ytdlのスレッドを実行
 
 counter = 0
@@ -43,7 +44,7 @@ while True:
             log = mcr.command(pal_stop)
             print(log)
             # server_proc.terminate()
-        time.sleep(10)
+        time.sleep(60)
         print("[INFO]Reboot Pal server start")
         server_proc = subprocess.run(pal_start, shell=True)
     else:
