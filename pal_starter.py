@@ -39,10 +39,10 @@ while True:
             log = mcr.command(pal_stop)
             print(log)
             # server_proc.terminate()
-        for i in range(4):
+        for i in range(5):
             time.sleep(10)
             sec_wait = str((i+1)*10)
-            if i <= 2:
+            if i <= 3:
                 print(f"[INFO]sleep {sec_wait}s")
             else:
                 print(f"[INFO]sleep {sec_wait}s end sleeping")
