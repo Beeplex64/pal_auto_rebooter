@@ -18,11 +18,6 @@ pal_before_10_sec = "Broadcast !!!Server_will_shutdown_in_10_seconds!!!"
 
 
 def log_output():
-    # while True:
-    #     line = server_proc.stdout.readline().decode('utf8', 'replace')
-    #     if line:
-    #         print(f"[Server_log]{line}", end='')
-    #     time.sleep(1)
     with io.open(server_proc.stdout.fileno(), closefd=False) as stream:
         [print('[Server_log]'+line.rstrip('\n')) for line in stream]
 
@@ -44,7 +39,6 @@ while True:
     mem_total = virtual_mem_total + swap_mem_total
     mem_free = virtual_mem_free + swap_mem_free
     mem_percent = ((mem_total - mem_free)/mem_total)*100
-    # mem = psutil.virtual_memory()
 
     if mem_percent > 95:
         print(f"[ERROR]Server mem allocation is too high! mem={mem_percent}%")
@@ -52,7 +46,7 @@ while True:
         with mcrcon.MCRcon(server_address, server_pass, server_port) as mcr:
             log = mcr.command(pal_stop)
             print(log)
-            # server_proc.terminate()
+
         for waiting_time in range(wait_time):
             time.sleep(10)
             sec_wait = str((waiting_time+1)*10)
@@ -68,7 +62,8 @@ while True:
                         log_10say = mcr.command(pal_before_10_sec)
                         print(log_10say)
         print("[INFO]Reboot Pal server start")
-        server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                       bufsize=-1)
         counter = 0
     else:
         if counter >= 20:
