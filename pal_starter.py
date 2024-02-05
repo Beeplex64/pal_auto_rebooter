@@ -14,13 +14,14 @@ server_port = 25575              # ポート番号
 pal_start = ("~/Desktop/steamcmd/palworld/PalServer.sh "
               "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS")
 pal_stop = "Shutdown 30 !!!MEMORY_LEAK_REBOOT_IS_SCHEDULED_IN_30_SECONDS!!!"
-pal_say = "Broadcast !!!Server_is_shutdown_in_10_seconds!!!"
+pal_before_10_sec = "Broadcast !!!Server_will_shutdown_in_10_seconds!!!"
 
 def log_output():
     while True:
         line = server_proc.stdout.readline().decode('utf8', 'replace')
         if line:
             print(f"[Server_log]{line}", end='')
+
 
 print("[INFO]Initial Pal server start")
 server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -48,20 +49,20 @@ while True:
             log = mcr.command(pal_stop)
             print(log)
             # server_proc.terminate()
-        for i in range(wait_time):
+        for waiting_time in range(wait_time):
             time.sleep(10)
-            sec_wait = str((i+1)*10)
-            if i <= wait_time-2:
+            sec_wait = str((waiting_time+1)*10)
+            if waiting_time <= wait_time-2:
                 print(f"[INFO]sleep {sec_wait}s")
             else:
                 print(f"[INFO]sleep {sec_wait}s end sleeping")
-            if i == 1:
+            if waiting_time == 1:
                 with mcrcon.MCRcon(server_address, server_pass, server_port) as mcr:
-                    log = mcr.command("Save")
-                    print(log)
-                with mcrcon.MCRcon(server_address, server_pass, server_port) as mcr:
-                    log = mcr.command(pal_say)
-                    print(log)
+                    log_save = mcr.command("Save")
+                    print(log_save)
+                    for i_say10 in range(3):
+                        log_10say = mcr.command(pal_before_10_sec)
+                        print(log_10say)
         print("[INFO]Reboot Pal server start")
         server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         counter = 0
