@@ -11,7 +11,7 @@ with open('./pass.txt', 'r') as passwd:  # apss.txtからパスワードを読�
 server_port = 25575              # ポート番号
 
 
-pal_start = ("/home/deck/Desktop/steamcmd/palworld/PalServer.sh "
+pal_start = ("~/Desktop/steamcmd/palworld/PalServer.sh "
               "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS")
 pal_stop = "Shutdown 30 !!!MEMORY_LEAK_REBOOT_IS_SCHEDULED_IN_30_SECONDS!!!"
 
