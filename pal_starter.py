@@ -3,7 +3,7 @@ import subprocess
 import mcrcon
 import time
 import threading
-
+import io
 
 server_address = "127.0.0.1"     # マルチプレイするときに入れるアドレス
 with open('./pass.txt', 'r') as passwd:  # apss.txtからパスワードを読み取る
@@ -16,15 +16,19 @@ pal_start = ("~/Desktop/steamcmd/palworld/PalServer.sh "
 pal_stop = "Shutdown 30 !!!MEMORY_LEAK_REBOOT_IS_SCHEDULED_IN_30_SECONDS!!!"
 pal_before_10_sec = "Broadcast !!!Server_will_shutdown_in_10_seconds!!!"
 
+
 def log_output():
-    while True:
-        line = server_proc.stdout.readline().decode('utf8', 'replace')
-        if line:
-            print(f"[Server_log]{line}", end='')
+    # while True:
+    #     line = server_proc.stdout.readline().decode('utf8', 'replace')
+    #     if line:
+    #         print(f"[Server_log]{line}", end='')
+    #     time.sleep(1)
+    with io.open(server_proc.stdout.fileno(), closefd=False) as stream:
+        [print('[Server_log]'+line.rstrip('\n')) for line in stream]
 
 
 print("[INFO]Initial Pal server start")
-server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+server_proc = subprocess.Popen(pal_start, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=-1)
 thread1 = threading.Thread(target=log_output,)  # サーバーの標準出力を出すスレッドを作成
 thread1.start()  # サーバーの標準出力を出すスレッドを実行
 
